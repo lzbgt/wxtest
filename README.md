@@ -6,6 +6,7 @@ A simple attempt to utilize the WeiXin open service, for learning GO and practis
 
 or
 * docker run  -v "$(pwd)":/myapp /myapp img-wxapp go build -v
+
 # more ..
 It's still under dev, based on my schedule
 
