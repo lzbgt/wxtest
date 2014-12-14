@@ -35,13 +35,15 @@ func tokenServer(tokParam *TokenReqParam) {
 	_token = make(chan string)
 	_credential = Credential{tokParam.appid, tokParam.secret, ""}
 	go func(){_token <- "ssss"}()
-
 	fmt.Println("asfasdfweafsaf")
 	go func(){
 		// request for token
+		fmt.Println("bbbb")
 		go func(){
+			fmt.Println("aaaa")
     		for{
     			<-_token
+    			fmt.Println("fetching tocken...")
     			resp, err := http.Get("https://api.weixin.qq.com/cgi-bin/token?" + param)
     			defer resp.Body.Close()
                 body, err := ioutil.ReadAll(resp.Body)

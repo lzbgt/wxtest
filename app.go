@@ -7,17 +7,14 @@ import (
 )
 
 func main() {
-    wxmp.TokenServer("wxd01846ec94dbe0d6", "e33b2fbf1b26762de92d2f87a5059aff")
+    wxmp.TokenServer("wxb7d39933d3a607af", "c115d488b48d0b27c8a9b10605177cf7")
     http.HandleFunc("/weixin/access", MsgHandler)
     http.ListenAndServe(":80", nil)
 }
 
-
 func MsgHandler(w http.ResponseWriter, r *http.Request) {
-    var mp = wxmp.New(&w, r)
-    fmt.Printf("%#v\n", mp)
-
-    if mp.Err != 0 {
+    mp := wxmp.New(&w, r)
+    if mp == nil {
         return
     }
 

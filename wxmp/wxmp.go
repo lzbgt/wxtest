@@ -38,26 +38,25 @@ func New(resp *http.ResponseWriter, req *http.Request) *WxMP {
     if nil != err {
     	fmt.Println("read body error:", err)
     	mp.Err = E_READ_BODY
-    	return mp
+    	return nil
     }
     fmt.Println(string(data));
 
     if req.Method == "GET" {
-    	accessVerify(resp, req)
+    	AccessVerify(resp, req)
     	mp.Err = E_ACCESS
-    	return mp
+    	return nil
     } else {
     	request := new (WildRequest)
     	er := xml.Unmarshal(data, request)
     	if nil != er {
     		fmt.Println("parse body err:", er)
     		mp.Err = E_PARSE_BODY
-    		return mp
+    		return nil
     	}
     	fmt.Printf("\n%#v\n", request);
     	mp.WildRequest = request
     	mp.Err = E_OK
-    	fmt.Printf("mp err%d\n", mp.Err);
     }
     return mp
 }
@@ -67,13 +66,14 @@ func (this *WxMP) ReplyEmptyMsg() {
 	    fmt.Println("\n\nError reply\n")
 	}
 }
-func (this *WxMP) ReplyTextMsg(content string) {
+
+func (this *WxMP) ReplyTextMsgEscape(content string) {
     txtMsg := TxtResponse{}
-    txtMsg.ToUserName = escapWXText(this.FromUserName)
-    txtMsg.FromUserName = escapWXText(this.ToUserName)
+    txtMsg.ToUserName = EscapWXText(this.FromUserName)
+    txtMsg.FromUserName = EscapWXText(this.ToUserName)
     txtMsg.CreateTime = time.Duration(time.Now().Unix())
-    txtMsg.MsgType = escapWXText("text")
-    txtMsg.Content = escapWXText(content)
+    txtMsg.MsgType = EscapWXText("text")
+    txtMsg.Content = EscapWXText(content)
     brespons, _ := xml.MarshalIndent(txtMsg, "", "    ")
   	brespons = bytes.Replace(brespons, []byte(CDATA_ALIAS_OPEN), []byte(CDATA_OPEN), -1)
   	brespons = bytes.Replace(brespons, []byte(CDATA_ALIAS_CLOSE ), []byte(CDATA_CLOSE), -1)
@@ -84,7 +84,22 @@ func (this *WxMP) ReplyTextMsg(content string) {
 	}
 }
 
-func escapWXText(s interface{}) string {
+func (this *WxMP) ReplyTextMsg(content string) {
+    txtMsg := TxtResponse{}
+    txtMsg.ToUserName = this.FromUserName
+    txtMsg.FromUserName = this.ToUserName
+    txtMsg.CreateTime = time.Duration(time.Now().Unix())
+    txtMsg.MsgType = "text"
+    txtMsg.Content = content
+    brespons, _ := xml.Marshal(txtMsg)
+  	fmt.Println(string(brespons))
+	(*this.resp).Header().Set("Content-Type", "text/xml")
+	if _, err := (*this.resp).Write(brespons); err != nil{
+	    fmt.Println("\n\nError reply\n")
+	}
+}
+
+func EscapWXText(s interface{}) string {
     if str, ok:= s.(string); ok {
         return CDATA_ALIAS_OPEN + str + CDATA_ALIAS_CLOSE
     }
@@ -99,7 +114,7 @@ func escapWXText(s interface{}) string {
     return str
 }
 
-func accessVerify(resp *http.ResponseWriter, req *http.Request) bool {
+func AccessVerify(resp *http.ResponseWriter, req *http.Request) bool {
 	signature := req.FormValue("signature")
 	timestamp := req.FormValue("timestamp")
 	nonce := req.FormValue("nonce")
