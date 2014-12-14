@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"io/ioutil"
 	"time"
-	mu "../myutils"
+	mu "myapp/myutils"
 )
 
 type TokenReqParam struct {

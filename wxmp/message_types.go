@@ -3,7 +3,7 @@ package wxmp
 import (
 	"encoding/xml"
 	"time"
-	mu "../myutils"
+	mu "myapp/myutils"
 	"encoding/json"
 	"net/http"
 	"io/ioutil"
