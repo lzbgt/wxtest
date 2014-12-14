@@ -10,4 +10,4 @@ or
 # more ..
 It's still under dev, based on my schedule
 
-Author: Bruce.Lu
+Author: Bruce.Lu lzbgt@126.com
