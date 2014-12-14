@@ -10,8 +10,8 @@ func MakeHttpGetParamStr(obj interface{}) string {
 	tot := reflect.TypeOf(obj)
 	vot := reflect.ValueOf(obj)
 	if tot.Kind() == reflect.Ptr {
-	    tot = tot.Elem()
-	    vot = vot.Elem()
+		tot = tot.Elem()
+		vot = vot.Elem()
 	}
 	arrParam := make([]string, vot.NumField())
 	for i := 0; i < vot.NumField(); i++ {

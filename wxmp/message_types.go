@@ -1,69 +1,68 @@
 package wxmp
 
 import (
-	"encoding/xml"
-	"time"
-	mu "myapp/myutils"
 	"encoding/json"
-	"net/http"
+	"encoding/xml"
 	"io/ioutil"
+	mu "myapp/myutils"
+	"net/http"
+	"time"
 )
 
 type WildRequest struct {
 	// base
-    XMLName      xml.Name `xml:"xml"`
+	XMLName      xml.Name `xml:"xml"`
 	ToUserName   string
 	FromUserName string
 	CreateTime   time.Duration
 	MsgType      string
-    MsgId 	     uint64
-    Encrypt      string
+	MsgId        uint64
+	Encrypt      string
 
-    // text
-    Content 	 string
+	// text
+	Content string
 
+	// base media
+	MediaId string
 
-    // base media
-    MediaId      string
+	// pic
+	PicUrl string
 
-    // pic
-    PicUrl       string
+	// voice
+	Format string
 
-    // voice
-    Format       string
+	// vr
+	Recognition string
 
-    // vr
-    Recognition  string
+	// video
+	ThumbMediaId string
 
-    // video
-    ThumbMediaId string
+	// position
+	Location_X string
+	Location_Y string
+	Scale      int
+	Label      string
 
-    // position
-    Location_X   string
-    Location_Y   string
-    Scale        int
-    Label        string
+	// link
+	Title       string
+	Description string
+	Url         string
 
-    // link
-    Title        string
-    Description  string
-    Url          string
+	// base event
+	Event string
 
-    // base event
-    Event        string
+	// QR Code
+	EventKey string
+	Ticket   string
 
-    // QR Code
-    EventKey     string
-    Ticket       string
+	// position report
+	Latitude  string
+	Longitude string
+	Precision float32
 
-    // position report
-    Latitude     string
-    Longitude    string
-    Precision    float32
+	// menu click
 
-    // menu click
-
-    // menu travel
+	// menu travel
 }
 
 type BaseRequest struct {
@@ -72,7 +71,7 @@ type BaseRequest struct {
 	FromUserName string
 	CreateTime   time.Duration
 	MsgType      string
-	MsgId 	     uint64
+	MsgId        uint64
 	Event        string
 	EventKey     string
 }
@@ -123,22 +122,22 @@ type Articles struct {
 	Items []*Item `xml:"item"`
 }
 
-type  UnionIDReq struct {
-    access_token string
-    openid       string
-    lang         string  //zh_CN, zh_TW, en
+type UnionIDReq struct {
+	access_token string
+	openid       string
+	lang         string //zh_CN, zh_TW, en
 }
 
 func (ui *UnionIDReq) Get(base *string) interface{} {
-    if base == nil {
-        base = new(string)
-        *base = "https://api.weixin.qq.com/cgi-bin/user/info?"
-    }
-    param := mu.MakeHttpGetParamStr(ui)
+	if base == nil {
+		base = new(string)
+		*base = "https://api.weixin.qq.com/cgi-bin/user/info?"
+	}
+	param := mu.MakeHttpGetParamStr(ui)
 	resp, _ := http.Get(*base + param)
 	defer resp.Body.Close()
-    body, _ := ioutil.ReadAll(resp.Body)
-    var msg map[string]interface{}
-    _ = json.Unmarshal(body, &msg)
-    return msg
+	body, _ := ioutil.ReadAll(resp.Body)
+	var msg map[string]interface{}
+	_ = json.Unmarshal(body, &msg)
+	return msg
 }
