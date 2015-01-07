@@ -8,6 +8,4 @@ or
 * docker run  -v "$(pwd)":/myapp /myapp img-wxapp go build -v
 
 # more ..
-It's still under dev, based on my schedule
-
-Author: Bruce.Lu lzbgt@126.com
+NA
